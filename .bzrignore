@@ -1,0 +1,4 @@
+**/build
+**/coverage
+**/.kdev4
+**/*.kdev4

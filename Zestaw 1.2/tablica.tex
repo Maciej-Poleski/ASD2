@@ -1,0 +1,37 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 1.2}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 1.2)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+\section{}
+\section{}
+Ciągom $p$ i $q$ będą odpowiadać wierzchołki grafu (każdy element ciągu to wierzchołek).
+Tworzymy dodatkowo wierzchołki $s$ i $t$. Łączymy wierzchołek $s$ z każdym wierzchołkiem z ciągu $p$ krawędzią skierowaną o przepustowości równej odpowiednio $p_i$ (o ile jest niezerowa). Łączymy każdy wierzchołek z ciągu $q$ z wierzchołkiem $t$ krawędzią skierowaną o przepustowości odpowiednio $q_i$ (o ile jest niezerowa). Łączymy każdy wierzchołek z ciągu $p$ z każdym wierzchołkiem z ciągu $q$ krawędzią o przepustowości 1 (słownie: jeden). Uruchamiamy RTF. Odpowiedź brzmi tak jeżeli po zakończeniu algorytmu zostały wysycone wszystkie krawędzie wychodzące z $s$ i wszystkie krawędzie wchodzące do $t$. Jako bonus istnieje możliwość zrekonstruowania grafu dwudzielnego. $n+m<=2\max(n,m)$ więc algorytm ma złożoność $O(\max(n,m)^3)$.
+
+\end{document}

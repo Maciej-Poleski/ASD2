@@ -1,0 +1,39 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 1.1}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 1.1)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+Ścieżka $10^{40}$ krawędzi. Wyróżnione wierzchołki to wierzchołki o stopniu 1 na tej ścieżce. Przepustowości wszystkich krawędzi są takie same (np. 1). Każda krawędź wyznacza pewien minimalny przekrój. Wierzchołków jest $10^{40}+1$.
+\section{}
+\section{}
+Algorytm E-K nadaje się do wyszukiwania minimalnego przekroju. Znaleziony minimalny przekrój ma minimalną ilość wierzchołków w zbiorze zawierającym źródło (pokazane na zajęciach). Można wykorzystać tą własność uruchamiając algorytm dwa razy. Za każdym razem rolę źródła i ujścia zamieniamy między wyróżnionymi wierzchołkami $x$ i $y$ (jeżeli graf jest skierowany to dodatkowo transponujemy go). Jeżeli za każdym razem uzyskamy ten sam podział to znaczy że istnieje tylko jeden minimalny przekrój. Jeżeli uzyskamy różne podziały - istnieje więcej niż jeden minimalny przekrój.
+\section{}
+Ustalamy przepustowość każdej krawędzi na jednostkową. Szukamy maksymalnego przepływu metodą Forda-Fulkersona. W efekcie znajdujemy (być może) kilka rozłącznych krawędziowo ścieżek od $x$ do $y$. Powiedzmy że ustalony maksymalny przepływ wynosi $a$. Każdą ścieżką wysyłamy $\lceil{s/a}\rceil$ szpiegów (lub mniej jeżeli do wysłania pozostało ich mniej). Trasy łatwo zrekonstruować przy użyciu sieci rezydualnej po zakończeniu metody F-F. Złożoność: szukanie ścieżki powiększającej $O(m)$ maksymalny przepływ w takim grafie $O(n)$ (co najwyżej ilość krawędzi wchodzących do ujścia - $O(n)$) wynik - $O(mn)$.
+
+\end{document}

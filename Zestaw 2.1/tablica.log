@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/TeX Live for SUSE Linux) (format=pdflatex 2013.3.15)  25 MAR 2013 18:01
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/TeX Live for SUSE Linux) (format=pdflatex 2013.3.15)  19 MAR 2013 09:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -254,39 +254,38 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 27.
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 ) [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <12> on input line 32.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <8> on input line 32.
-LaTeX Font Info:    External font `plex10' loaded for size
-(Font)              <6> on input line 32.
- (/usr/share/texmf/tex/latex/ucs/data/uni-1.def
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (/usr/share/texmf/tex/late
+x/ucs/data/uni-1.def
 File: uni-1.def 2012/04/20 UCS: Unicode data U+0100..U+01FF
 )
 (/usr/share/texmf/tex/latex/ucs/data/uni-0.def
 File: uni-0.def 2012/04/20 UCS: Unicode data U+0000..U+00FF
-) [2] [3] (./tablica.aux) ) 
+)
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <12> on input line 41.
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <8> on input line 41.
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <6> on input line 41.
+ [2] [3] (./tablica.aux) ) 
 Here is how much of TeX's memory you used:
  4085 strings out of 493607
  50632 string characters out of 3149945
- 101603 words of memory out of 3500000
+ 100603 words of memory out of 3500000
  7369 multiletter control sequences out of 15000+200000
  15066 words of font info for 49 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 27i,6n,32p,1070b,478s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf/fonts/enc/dvips/pl/plrm.enc}{/usr/
-share/texmf/fonts/enc/dvips/pl/plmi.enc}{/usr/share/texmf/fonts/enc/dvips/pl/pl
-ms.enc}</usr/share/texmf/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/s
-hare/texmf/fonts/type1/public/pl/plbx12.pfb></usr/share/texmf/fonts/type1/publi
-c/pl/plmi12.pfb></usr/share/texmf/fonts/type1/public/pl/plmi8.pfb></usr/share/t
-exmf/fonts/type1/public/pl/plr12.pfb></usr/share/texmf/fonts/type1/public/pl/pl
-r17.pfb></usr/share/texmf/fonts/type1/public/pl/plr8.pfb></usr/share/texmf/font
-s/type1/public/pl/plsy10.pfb>
-Output written on tablica.pdf (3 pages, 42335 bytes).
+ 27i,6n,32p,1035b,478s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texmf/fonts/enc/dvips/pl/plms.enc}{/usr/s
+hare/texmf/fonts/enc/dvips/pl/plmi.enc}{/usr/share/texmf/fonts/enc/dvips/pl/plr
+m.enc}</usr/share/texmf/fonts/type1/public/pl/plbx12.pfb></usr/share/texmf/font
+s/type1/public/pl/plmi12.pfb></usr/share/texmf/fonts/type1/public/pl/plr12.pfb>
+</usr/share/texmf/fonts/type1/public/pl/plr17.pfb></usr/share/texmf/fonts/type1
+/public/pl/plsy8.pfb>
+Output written on tablica.pdf (3 pages, 32075 bytes).
 PDF statistics:
- 49 PDF objects out of 1000 (max. 8388607)
- 35 compressed objects within 1 object stream
+ 37 PDF objects out of 1000 (max. 8388607)
+ 26 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

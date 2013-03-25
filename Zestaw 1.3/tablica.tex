@@ -4,7 +4,7 @@
 \usepackage[utf8x]{inputenc}
 \usepackage{polski}
 
-\title{Zadania domowe. Zestaw 1.3}
+\title{Zadania domowe. Zestaw 2.1}
 \author{Maciej Poleski}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -15,7 +15,7 @@
 \date{\today}
 
 \pdfinfo{%
-  /Title    (Zadania domowe. Zestaw 1.3)
+  /Title    (Zadania domowe. Zestaw 2.1)
   /Author   (Maciej Poleski)
   /Creator  (Maciej Poleski)
   /Producer (Maciej Poleski)
@@ -29,17 +29,19 @@
 \newpage
 
 \section{}
-Maksymalne skojarzenie jest nie większe niż pokrycie wierzchołkowe. Każda krawędź skojarzenia ma jakiś koniec należący do pokrycia wierzchołkowego oraz nie istnieje wierzchołek należący do dwóch krawędzi skojarzenia. Można patrzeć na to intuicyjnie jak na przypisanie każdej krawędzi jakiegoś dedykowanego wierzchołka z pokrycia wierzchołkowego, który nie jest przypisany żadnej innej krawędzi (należy do danej krawędzi) (iniekcja). Jest tak z definicji pokrycia wierzchołkowego (mapowanie) oraz skojarzenia (krawędzie parami rozłączne wierzchołkowo). Dlaczego jest równe. Zasadniczo dlatego że to wystarcza. Istnieje takie pokrycie wierzchołkowe że dla każdej krawędzi skojarzonej istnieje dokładnie jeden wierzchołek należący do pokrycie wierzchołkowego. Wybieramy z grafu po kolei krawędzie skojarzone. Są trzy możliwości.
-\begin{enumerate}
- \item Ta krawędź nie ma wspólnego wierzchołka z inną krawędzią (oczywiście nieskojarzoną - skojarzone nie mogą być sąsiadami) - wybieramy dowolny.
- \item Krawędź ma jeden wierzchołek wspólny z innymi krawędziami (oczywiście nieskojarzonymi) - ten wierzchołek idzie do pokrycia. O tej krawędzi zapominamy (właściwie bardziej poprawnie byłoby: usuwamy ją).
- \item Krawędź ma oba wierzchołki wspólne z innymi krawędziami (oczywiście nieskojarzonymi) - taka sytuacja nie ma miejsca. Gdyby miała, to natychmiast mamy ścieżkę powiększającą maksymalne skojarzenie - sprzeczność.
-\end{enumerate}
-Te trzy możliwości odpowiadają tak naprawdę jednej sytuacji: nie ma ścieżki powiększającej. Gdy tak jest to wszystkie ścieżki naprzemienne mają parzystą długość, a to pozwala nam bez trudu dobrać wierzchołki do pokrycia.
- 
-\section{D}
-Duplikujemy wierzchołki grafu tak jak w zadaniu D. Łączymy je tak jak w zadaniu D. Czyli jeżeli w grafie istnieje krawędź $(x,y)$. To u nas są wierzchołki $x$, $x'$, $y$, $y'$ oraz krawędź $(x,y')$.
-Robimy skojarzenie. (H-C). Lewa strona to strona wychodząca wierzchołków. Prawa strona to strona wchodząca wierzchołków. W takim razie krawędzie skojarzenia odpowiadają krawędzią grafu. Zmaksymalizowano ilość krawędzi czyli zminimalizowano ilość nie wybranych wierzchołków. Każdy nie wybrany wierzchołek $x$ (z lewej strony) symbolizuje wierzchołek na którym kończy się pewna ścieżka (lub każdy $x'$ (z prawej) rozpoczyna ścieżkę). Każda ścieżka ma początek (oraz koniec). Odpowiedzią jest ilość wierzchołków nieskojarzonych czyli liczba wierzchołków minus maksymalne skojarzenie.
+$n-p$ jest długością prefixu powiedzmy $a$. Przedewszystkim $a$ nie jest potęgą całkowitą. Gdyby był, to istniałby dłuższy prefikso sufiks od naszego maksymalnego. Zauważmy że ten wzorzec powtarza się (jeżeli $n-p|n$ to $p\nless{\frac{n}{2}}$ bo najmniejszą liczbą pierwszą jest 2). Słowo $a$ jest prefiksem maksymalnego prefikso sufiksu będącego prefiksem słowa $w$. Skoro tak, to jest również prefiksem maksymalnego prefikso sufiksu będącego sufiksem słowa $w$. Czyli istnieje prefiks $aa$. Po wykonaniu dostatecznie wielu kroków okazuje się że cały tekst jest konkatenacją wzorca $a$ z samym sobą dostatecznie wiele razy.
+
+Teraz w drugą stronę. Mamy tekst powiedzmy tej postaci: $aaaaa...aaaa$ (gdzie $a$ oczywiście nie jest potęgą całkowitą (gdyby było, to bierzemy to mniejsze słowo które jest potęgowane)). Oczywiście widać że istnieje prefikso sufix długości $n-|a|$ i jak widać jego długość dzieli $n$. Dodatkowo jest to maksymalny prefikso sufiks (bo $a$ nie jest potęgowe).
+
 \section{}
+Możliwe są dwie sytuacje. Nasze słowo jest albo prefiksem albo sufiksem wynikowego palindromu. Gdyby tak nie było, to można kasować skrajne znaki aż zredukujemy problem do jednego z dwóch powyższych.
+Nasze słowo z punktu widzenia wynikowego palindromu może wyglądać na dwa sposoby: $ab\hat{b}$ lub $b\hat{b}a$. Gdy dokleimy do niego jego samego odwróconego uzyskamy $ab\hat{b}b\hat{b}\hat{a}$ lub $b\hat{b}a\hat{a}b\hat{b}$. Maksymalizujemy długość prefikso sufiksu (czyli szukamy maksymalnego prefikso sufiksu). Wybieramy tę wersję w której maksymalny prefikso sufiks będzie dłuższy. Pozostaje nam wtedy dokleić do wyjściowego słowa z odpowiedniej strony to co nie zostało dopasowane (odwrócone). Na szczęście w przypadku palindromu nieparzystego nic się nie zmienia (tylko wskakuje dodatkowa litera (np $c$) i pojawiają się podsłowa $bc\hat{b}$ zamiast $b\hat{b}$.
+
+\section{}
+\section{}
+\section{}
+Będziemy dopasowywać wzorzec po kawałku. Umieszczamy tekst w tablicy rezerwując na jej początku dostatecznie dużo miejsca, aby móc dopisać wzorzec. Robimy przejście po wzorcu dzieląc go na kawałki odzielone znakami '*' (powtarzające się '***...***' logicznie sklejamy w jeden '*' - nic one nie wnoszą). Każdy tak uzyskany kawałek będziemy doklejać przed rzesztę tekstu która nam pozostała (odzielając oczywiście jakimś znakiem nie należącym do alfabetu). Mając tak przygotowany napis uruchamiamy standardowy KMP. Z chwilą gdy znajdziemy jakieś dopasowanie (czyli prefikso sufiks równy długości danego fragmentu wzorca) odcinamy ten prefiks tekstu który już przeanalizowaliśmy i do pozostałej doklejamy kolejny fragment wzorca i powtarzamy ten algorytm do oporu (nie ma potrzeby kończyć KMP - dalsze dopasowania nas nie interesują) (aż braknie fragmentów, lub skończy się nie mając dopasowania). Jeżeli zabrakło fragmentów - istnieje dopasowanie. Jeżeli zabrakło tekstu - nie istnieje.
+
+Cały algorytm opiera się na idei zachłannej. Mogąc dopasować dany fragment dopasowuję go tak wcześnie jak to możliwe (nigdy nie jest to błąd). Z kolei fragmenty muszą być dopasowywane w ściśle określonej kolejności. Koszt całości to jedna iteracja po wzorcu + iteracja po wszystkich fragmentach (czyli ponownie jedna po wzorcu) i jedna iteracja po tekście.
 
 \end{document}

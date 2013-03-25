@@ -1,0 +1,45 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 1.3}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 1.3)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+Maksymalne skojarzenie jest nie większe niż pokrycie wierzchołkowe. Każda krawędź skojarzenia ma jakiś koniec należący do pokrycia wierzchołkowego oraz nie istnieje wierzchołek należący do dwóch krawędzi skojarzenia. Można patrzeć na to intuicyjnie jak na przypisanie każdej krawędzi jakiegoś dedykowanego wierzchołka z pokrycia wierzchołkowego, który nie jest przypisany żadnej innej krawędzi (należy do danej krawędzi) (iniekcja). Jest tak z definicji pokrycia wierzchołkowego (mapowanie) oraz skojarzenia (krawędzie parami rozłączne wierzchołkowo). Dlaczego jest równe. Zasadniczo dlatego że to wystarcza. Istnieje takie pokrycie wierzchołkowe że dla każdej krawędzi skojarzonej istnieje dokładnie jeden wierzchołek należący do pokrycie wierzchołkowego. Wybieramy z grafu po kolei krawędzie skojarzone. Są trzy możliwości.
+\begin{enumerate}
+ \item Ta krawędź nie ma wspólnego wierzchołka z inną krawędzią (oczywiście nieskojarzoną - skojarzone nie mogą być sąsiadami) - wybieramy dowolny.
+ \item Krawędź ma jeden wierzchołek wspólny z innymi krawędziami (oczywiście nieskojarzonymi) - ten wierzchołek idzie do pokrycia. O tej krawędzi zapominamy (właściwie bardziej poprawnie byłoby: usuwamy ją).
+ \item Krawędź ma oba wierzchołki wspólne z innymi krawędziami (oczywiście nieskojarzonymi) - taka sytuacja nie ma miejsca. Gdyby miała, to natychmiast mamy ścieżkę powiększającą maksymalne skojarzenie - sprzeczność.
+\end{enumerate}
+Te trzy możliwości odpowiadają tak naprawdę jednej sytuacji: nie ma ścieżki powiększającej. Gdy tak jest to wszystkie ścieżki naprzemienne mają parzystą długość, a to pozwala nam bez trudu dobrać wierzchołki do pokrycia.
+ 
+\section{C}
+Duplikujemy wierzchołki grafu tak jak w zadaniu C. Łączymy je tak jak w zadaniu C. Czyli jeżeli w grafie istnieje krawędź $(x,y)$. To u nas są wierzchołki $x$, $x'$, $y$, $y'$ oraz krawędź $(x,y')$.
+Robimy skojarzenie. (H-C).
+\section{}
+
+\end{document}

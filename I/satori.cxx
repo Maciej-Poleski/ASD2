@@ -90,34 +90,78 @@ namespace
 {
 using namespace Wrapper;
 
-class String : public std::string
+template<typename String>
+std::vector<uint32_t> PREF(const String & string)
 {
-public:
-    char & operator[](size_t i)
+    size_t s = 0;
+    size_t length=string.length();
+    std::vector<uint32_t> pref(length);
+    pref[0] = 0;
+    for(size_t i=1; i<length; ++i)
     {
-        std::cerr<<"Dostęp do "<<i<<'\n';
-        return std::string::operator[](i);
+        if(s + pref[s] > i)
+            pref[i] = std::min<uint32_t>(pref[i-s], pref[s] - i + s);
+        else
+            pref[i] = 0;
+
+        while((pref[i] + i<length) && (string[pref[i]] == string[pref[i] + i]))
+            ++pref[i];
+
+        if(i + pref[i] > s + pref[s])
+            s = i;
     }
+    return pref;
+}
 
-    const char & operator[](size_t i) const
-    {
-        std::cerr<<"Odczyt z "<<i<<'\n';
-        return std::string::operator[](i);
-    }
-};
+template<typename String>
+static bool test(const String & string, const size_t left, const size_t right)
+{
+    const size_t length=right-left;
+    const size_t s=(right+left)/2;
+    if(length<2)
+        return false;
+    if(length==2)
+        return string[left]==string[left+1];
+    if(test(string,left,s) || test(string,s,right))
+        return true;
+    const String partLeft=string.substr(left,s-left),partRight=string.substr(s,right-s);
+    const String reverseLeft(partLeft.rbegin(),partLeft.rend()),
+          reverseRight(partRight.rbegin(),partRight.rend());
+    std::vector<uint32_t> prefSide=PREF(partRight);
+    String temp=reverseLeft+reverseRight;
+    std::vector<uint32_t> prefTotal=PREF(temp);
+    for(size_t k=1; k<partRight.size(); ++k)
+        if(prefSide[k]+prefTotal[reverseLeft.size()+reverseRight.size()-k]>=k)
+            return true;
+    if(prefTotal[partLeft.size()]>=partRight.size())
+        return true;
+    prefSide=PREF(reverseLeft);
+    temp=partRight+partLeft;
+    prefTotal=PREF(temp);
+    for(size_t k=1; k<reverseLeft.size(); ++k)
+        if(prefSide[k]+prefTotal[partRight.size()+partLeft.size()-k]>=k)
+            return true;
+    if(prefTotal[partRight.size()]>=partLeft.size())
+        return true;
+    return false;
+}
 
-template<typename String, typename Pref>
-void PREF(const String & t, size_t d, Pref & pre) {
-    int k = pre[0] = 0;
-    for(int i=1; i<=d-1; i++)
-    {
-        if(k + pre[k] > i) pre[i] = std::min(pre[i-k], pre[k] - i + k);
-        else pre[i] = 0;
-
-        while((pre[i] + i<d) && (t[pre[i]] == t[pre[i] + i])) pre[i]++;
-
-        if(i + pre[i] > k + pre[k]) k = i;
-    }
+template<typename String>
+static bool testStart(const String & string,const size_t length)
+{
+//     if(length<2)
+//         return false;
+//     for(std::size_t i=0; i+1<length; ++i)
+//     {
+//         if(string[i]==string[i+1])
+//             return true;
+//     }
+//     for(std::size_t i=0; i+3<length; ++i)
+//     {
+//         if((string[i]==string[i+2]) && (string[i+1]==string[i+3]))
+//             return true;
+//     }
+    return test(string,0,length);
 }
 
 inline static void solution() __attribute__((optimize(3)));
@@ -129,14 +173,15 @@ inline static void solution()
     //z=1;
     while(z--)
     {
-        String myString;
-        in>>myString;
-        size_t length=myString.length();
-        std::vector<int> pref(length);
-        PREF(myString,length,pref);
-        for(size_t i=0; i<length; ++i)
-            out<<pref[i]<<' ';
-        out<<'\n';
+        std::basic_string<int> string;
+        size_t n;
+        in>>n;
+        string.resize(n);
+        for(size_t i=0; i<n; ++i)
+        {
+            in>>string[i];
+        }
+        out<<((testStart(string,n))?"TAK":"NIE")<<'\n';
     }
 }
 

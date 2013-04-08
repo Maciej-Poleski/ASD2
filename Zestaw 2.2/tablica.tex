@@ -1,0 +1,56 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 2.2}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 2.2)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+\section{}
+Palindrom nieparzysty $s$ wygląda tak, że jeżeli $s[0]$ jest środkiem, to $s[-i]\neq{s[i]}$ (dla wygody indeksuję od środka). Czyli tak naprawdę zmiana dotyczy sposobu porównywania znaków w Manacherze (mamy alfabet binarny). Możemy to sprawdzić za pomocą tej prostej i intuicyjnej implementacji (obliczającej równocześnie palindromy parzyste i nieparzyste).
+\begin{alltt}
+ T - tekst nad alfabetem skłądającym się z 2 znaków
+ N - długość tekstu
+ R - tablica długości 2*N+1
+ 
+ k <- 0
+ i <- 0
+ while k<=2*N: 
+    while (k-i)/2>0 and (k+i)/2<N and T[(k-i)/2-1]=T[(k+i)/2]:
+      i <- i + 2
+    R[k] <- i
+    j <- 1
+    while j<i and j+R[k-j]<i:
+      R[k+j] <- R[k-j]
+      j <- j + 1
+    k <- k + j
+    i <- max(i-j,k%2)
+\end{alltt}
+Na parzystych indeksach są długości kolejnych palindromów parzystych. Na nieparzystych nieparzystych. Można sobie przeszukać liniowo tablicę R...
+\section{}
+Mając słowo $a$ i $b$ (które być może jest prawie obrotem cyklicznym $a$) możemy przypatrzyć się słowu $bb$. W przypadku gdy jest to obrót cykliczny sytuacja wygląda tak: $a=xy$, $b=yx$ wtedy $bb=yxyx=yax$. W naszej sytuacji będziemy dopasowywać prefiks słowa $a$ do infiksu słowa $bb$ i sufiks $a$ do infiksu $bb$. Dodatkowo uwzględniamy fakt że między dopasowanym prefiksem a sufiksem musi być dokładnie jeden znak odstępu oraz łączna długość dopasowanego prefiksu + sufiksu + 1 musi być długością słowa $a$. Możemy wykorzystać prefikso-prefiksy (i sufikso-sufiksy) aby wyznaczyć dla każdej pozycji w słowie $bb$ długość najdłuższego prefiksu słowa $a$ zaczynającego się w tym miejscu. Analogicznie postępujemy dla sufiksów. Pozostaje teraz jednokrotnie przeszukać napis analizując wyznaczone tablice w celu uzyskania informacji, czy w danym miejscu istnieje satysfakcjonujące nas dopasowanie.
+
+\end{document}

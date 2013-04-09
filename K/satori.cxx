@@ -167,7 +167,7 @@ static void doAC()
     }
 }
 
-static Node *singlePattern[3000];
+static Node *singlePattern[3001];
 
 static char text[3000][3000];
 static std::size_t c,d;
@@ -219,6 +219,25 @@ static void findMatch()
     }
 }
 
+template<typename String>
+static std::vector<int32_t> kmp(const String &string)
+{
+    int32_t j,length=string.length();
+    std::vector<int32_t> KMP(length+1);
+    KMP[0] = j = -1;
+    for(size_t i = 1; i <= length; ++i)
+    {
+        while((j > -1) && (string[j] != string[i - 1]))
+            j = KMP[j];
+        ++j;
+        if((i == length) || (string[i] != string[j]))
+            KMP[i] = j;
+        else
+            KMP[i] = KMP[j];
+    }
+    return KMP;
+}
+
 inline static void solution() __attribute__((optimize(3)));
 inline static void solution()
 {
@@ -247,6 +266,19 @@ inline static void solution()
             }
         }
         findMatch();
+
+        singlePattern[a]=root;
+        std::basic_string<Node*> ultimatePattern(singlePattern,singlePattern+a+1);
+        std::size_t result=0;
+        for(size_t i=0;i<d;++i)
+        {
+            std::basic_string<Node*> text=ultimatePattern;
+            for(size_t j=0;j<c;++j)
+                text+=match[j][i];
+            std::vector<int32_t> KMP=kmp(text);
+            result+=std::count(KMP.begin(),KMP.end(),a);
+        }
+        out<<result<<'\n';
     }
 }
 

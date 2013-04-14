@@ -254,16 +254,31 @@ NFAPtr NFA::acceptStar(NFAPtr A)
 {
     if(A==emptyNFA)
         return A;
+//     NFAPtr result(new NFA);
+//     result->transferStates(A);
+//     State *aux=result->newState(true,true);
+//     for(std::vector<State*>::iterator i=A->terminalStates.begin(),e=A->terminalStates.end(); i!=e; ++i)
+//     {
+//         (*i)->edges.push_back( {aux,'\0'});
+//     }
+//     for(std::vector<State*>::iterator i=A->startStates.begin(),e=A->startStates.end(); i!=e; ++i)
+//     {
+//         aux->edges.push_back( {*i,'\0'});
+//     }
+//     return result;
     NFAPtr result(new NFA);
     result->transferStates(A);
-    State *aux=result->newState(true,true);
+    State *start=result->newState(true,false);
+    State *terminal=result->newState(false,true);
+    start->edges.push_back( {terminal,'\0'});
     for(std::vector<State*>::iterator i=A->terminalStates.begin(),e=A->terminalStates.end(); i!=e; ++i)
     {
-        (*i)->edges.push_back( {aux,'\0'});
+        (*i)->edges.push_back( {terminal,'\0'});
     }
     for(std::vector<State*>::iterator i=A->startStates.begin(),e=A->startStates.end(); i!=e; ++i)
     {
-        aux->edges.push_back( {*i,'\0'});
+        start->edges.push_back( {*i,'\0'});
+        terminal->edges.push_back( {*i,'\0'});
     }
     return result;
 }
@@ -335,9 +350,9 @@ struct DetState
     bool terminal;
 
     DetState() : terminal(false) {}
-    DetState(const DetState &detState) : next{detState.next[0],detState.next[1]}, terminal(detState.terminal) {}
+    DetState(const DetState &detState) : next {detState.next[0],detState.next[1]}, terminal(detState.terminal) {}
 
-    DetState(uint32_t a,uint32_t b, bool terminal) : next{a,b}, terminal(terminal) {}
+    DetState(uint32_t a,uint32_t b, bool terminal) : next {a,b}, terminal(terminal) {}
 };
 
 uint32_t charToIndex(const char c)
@@ -517,7 +532,7 @@ uint64_t DFAMaker::stateSetFromStateSet(const std::tr1::unordered_set< State* >&
 bool DFAMaker::isAccepted(const std::string &line)
 {
     uint32_t state=0;
-    for(std::string::const_iterator i=line.begin(),e=line.end();i!=e;++i)
+    for(std::string::const_iterator i=line.begin(),e=line.end(); i!=e; ++i)
     {
         check(*i=='a' || *i=='b');
         state=DFA[state]->next[charToIndex(*i)];

@@ -254,32 +254,32 @@ NFAPtr NFA::acceptStar(NFAPtr A)
 {
     if(A==emptyNFA)
         return A;
-//     NFAPtr result(new NFA);
-//     result->transferStates(A);
-//     State *aux=result->newState(true,true);
-//     for(std::vector<State*>::iterator i=A->terminalStates.begin(),e=A->terminalStates.end(); i!=e; ++i)
-//     {
-//         (*i)->edges.push_back( {aux,'\0'});
-//     }
-//     for(std::vector<State*>::iterator i=A->startStates.begin(),e=A->startStates.end(); i!=e; ++i)
-//     {
-//         aux->edges.push_back( {*i,'\0'});
-//     }
-//     return result;
     NFAPtr result(new NFA);
     result->transferStates(A);
-    State *start=result->newState(true,false);
-    State *terminal=result->newState(false,true);
-    start->edges.push_back( {terminal,'\0'});
+    State *aux=result->newState(true,true);
     for(std::vector<State*>::iterator i=A->terminalStates.begin(),e=A->terminalStates.end(); i!=e; ++i)
     {
-        (*i)->edges.push_back( {terminal,'\0'});
+        (*i)->edges.push_back( {aux,'\0'});
     }
     for(std::vector<State*>::iterator i=A->startStates.begin(),e=A->startStates.end(); i!=e; ++i)
     {
-        start->edges.push_back( {*i,'\0'});
-        terminal->edges.push_back( {*i,'\0'});
+        aux->edges.push_back( {*i,'\0'});
     }
+    return result;
+    //     NFAPtr result(new NFA);
+    //     result->transferStates(A);
+    //     State *start=result->newState(true,false);
+    //     State *terminal=result->newState(false,true);
+    //     start->edges.push_back( {terminal,'\0'});
+    //     for(std::vector<State*>::iterator i=A->terminalStates.begin(),e=A->terminalStates.end(); i!=e; ++i)
+    //     {
+    //         (*i)->edges.push_back( {terminal,'\0'});
+    //     }
+    //     for(std::vector<State*>::iterator i=A->startStates.begin(),e=A->startStates.end(); i!=e; ++i)
+    //     {
+    //         start->edges.push_back( {*i,'\0'});
+    //         terminal->edges.push_back( {*i,'\0'});
+    //     }
     return result;
 }
 
@@ -307,7 +307,7 @@ const std::vector< State* >& NFA::getStartStates() const
 
 static NFAPtr parseRegex()
 {
-    NFAPtr result=NFA::acceptEmpty();
+    NFAPtr result=NFA::acceptStar(NFA::acceptDot());
     NFAPtr lastPart=NFA::acceptEmpty();
     for(;;)
     {

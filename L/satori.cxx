@@ -88,8 +88,8 @@ typedef std::size_t size_t;
 #include <map>
 #include <tr1/memory>
 #include <tr1/functional>
-#include <tr1/unordered_map>
-#include <tr1/unordered_set>
+// #include <tr1/unordered_map>
+// #include <tr1/unordered_set>
 
 namespace
 {
@@ -340,7 +340,7 @@ struct DetState
     DetState(uint32_t a,uint32_t b, bool terminal) : next{a,b}, terminal(terminal) {}
 };
 
-uint32_t charToIndex(const char c)
+size_t charToIndex(const char c)
 {
     return c=='b';
 }
@@ -356,7 +356,7 @@ static std::size_t getNFASize(NFAPtr nfa)
     return nfa->getAllStatesCount();
 }
 
-static void travelByNull(std::tr1::unordered_set<State*> &result, State *state)
+static void travelByNull(std::set<State*> &result, State *state)
 {
     result.insert(state);
     for(std::vector<Edge>::const_iterator i=state->edges.begin(),e=state->edges.end(); i!=e; ++i)
@@ -366,7 +366,7 @@ static void travelByNull(std::tr1::unordered_set<State*> &result, State *state)
     }
 }
 
-static void travelByChar(std::tr1::unordered_set<State*> &result, State *state,char c)
+static void travelByChar(std::set<State*> &result, State *state,char c)
 {
     for(std::vector<Edge>::const_iterator i=state->edges.begin(),e=state->edges.end(); i!=e; ++i)
     {
@@ -389,15 +389,15 @@ public:
 private:
     size_t integerFromState(State *state);
     uint32_t detStateFromStateSet(uint64_t stateSet);
-    uint64_t stateSetFromStateSet(const std::tr1::unordered_set<State*> &set);
+    uint64_t stateSetFromStateSet(const std::set<State*> &set);
 
 private:
     const NFAPtr nfa;
     const std::size_t NFASize;
-    std::tr1::unordered_map<State*,size_t> stateToInteger;
+    std::map<State*,size_t> stateToInteger;
     std::size_t nextIntegerFromState;
     std::vector<State*> stateByInteger;
-    std::tr1::unordered_map<uint64_t,uint32_t> stateSetToDetState;
+    std::map<uint64_t,uint32_t> stateSetToDetState;
     std::vector<DetState> DFA;
 };
 
@@ -407,7 +407,7 @@ void DFAMaker::makeDFA()
     uint64_t t=0;
     {
         const std::vector<State*> &startStates=nfa->getStartStates();
-        std::tr1::unordered_set<State*> set;
+        std::set<State*> set;
         for(std::vector<State*>::const_iterator i=startStates.begin(),e=startStates.end(); i!=e; ++i)
         {
             travelByNull(set,*i);
@@ -415,7 +415,7 @@ void DFAMaker::makeDFA()
         t|=stateSetFromStateSet(set);
     }
     detStatesToFollow.push(t);
-    std::tr1::unordered_set<uint64_t> stateSetEnqueued;
+    std::set<uint64_t> stateSetEnqueued;
     stateSetEnqueued.insert(t);
     while(!detStatesToFollow.empty())
     {
@@ -425,7 +425,7 @@ void DFAMaker::makeDFA()
 
         // a
         {
-            std::tr1::unordered_set<State*> set;
+            std::set<State*> set;
             for(size_t i=0; i<NFASize; ++i)
             {
                 if((1UL<<i) & stateSet)
@@ -444,7 +444,7 @@ void DFAMaker::makeDFA()
 
         // b
         {
-            std::tr1::unordered_set<State*> set;
+            std::set<State*> set;
             for(size_t i=0; i<NFASize; ++i)
             {
                 if((1UL<<i) & stateSet)
@@ -498,10 +498,10 @@ uint32_t DFAMaker::detStateFromStateSet(const uint64_t stateSet)
 }
 
 
-uint64_t DFAMaker::stateSetFromStateSet(const std::tr1::unordered_set< State* >& set)
+uint64_t DFAMaker::stateSetFromStateSet(const std::set< State* >& set)
 {
     uint64_t result=0;
-    for(std::tr1::unordered_set< State* >::const_iterator i=set.begin(),e=set.end(); i!=e; ++i)
+    for(std::set< State* >::const_iterator i=set.begin(),e=set.end(); i!=e; ++i)
     {
         result|= (1UL<<integerFromState(*i));
     }

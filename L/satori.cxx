@@ -535,6 +535,8 @@ bool DFAMaker::isAccepted(const std::string &line)
     for(std::string::const_iterator i=line.begin(),e=line.end(); i!=e; ++i)
     {
         check(*i=='a' || *i=='b');
+        if(DFA[state]->terminal)
+            return true;
         state=DFA[state]->next[charToIndex(*i)];
     }
     return DFA[state]->terminal;

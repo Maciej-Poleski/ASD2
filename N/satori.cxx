@@ -86,10 +86,10 @@ typedef std::size_t size_t;
 #include <iomanip>
 #include <set>
 #include <map>
-#include <tr1/memory>
-#include <tr1/functional>
-#include <tr1/unordered_map>
-#include <tr1/unordered_set>
+// #include <tr1/memory>
+// #include <tr1/functional>
+// #include <tr1/unordered_map>
+// #include <tr1/unordered_set>
 
 namespace
 {
@@ -105,19 +105,22 @@ struct Circle
     int32_t parent;
 };
 
-static Circle *input;
+static Circle *input=0;
 static size_t n;
 
 struct Event
 {
     uint32_t circleId;
     bool side;  // false=left, true=right
+
+    Event() {}
+    Event(uint32_t id,bool s) : circleId(id), side(s) {}
 };
 
-static const bool operator<(const Event& lhs,const Event& rhs)
+const bool operator<(const Event& lhs,const Event& rhs)
 {
-    int32_t lhsP=input[lhs.circleId].x+(!lhs.side?-input[lhs.circleId].r:input[lhs.circleId].r);
-    int32_t rhsP=input[rhs.circleId].x+(!rhs.side?-input[rhs.circleId].r:input[rhs.circleId].r);
+    int32_t lhsP=input[lhs.circleId].x+((!lhs.side)?(-input[lhs.circleId].r):(input[lhs.circleId].r));
+    int32_t rhsP=input[rhs.circleId].x+((!rhs.side)?(-input[rhs.circleId].r):(input[rhs.circleId].r));
     return lhsP<rhsP;
 }
 
@@ -125,6 +128,8 @@ struct Point
 {
     uint32_t circleId;
     bool     upper;     // false=bottom,true=top
+
+    Point(uint32_t id, bool u) : circleId(id), upper(u) {}
 };
 
 static uint64_t dist(int64_t x1,int64_t y1,int64_t x2,int64_t y2)
@@ -135,12 +140,14 @@ static uint64_t dist(int64_t x1,int64_t y1,int64_t x2,int64_t y2)
 /**
  * Najwyższy jest największy w relacji
  */
-static const bool operator<(const Point& lhs,const Point& rhs)
+const bool operator<(const Point& lhs,const Point& rhs)
 {
     if(lhs.circleId==rhs.circleId)
-        return lhs.upper<rhs.upper;
-    else if(dist(input[lhs.circleId].x,input[lhs.circleId].y,input[rhs.circleId].x,input[rhs.circleId].y)>
-            (input[lhs.circleId].r+input[rhs.circleId].r)*(input[lhs.circleId].r+input[rhs.circleId].r))
+        return (!lhs.upper) &&  (rhs.upper);
+    else if(dist(input[lhs.circleId].x,input[lhs.circleId].y,
+                 input[rhs.circleId].x,input[rhs.circleId].y)>
+            (static_cast<uint64_t>(input[lhs.circleId].r)+input[rhs.circleId].r)*
+            (static_cast<uint64_t>(input[lhs.circleId].r)+input[rhs.circleId].r))
     {
         return input[lhs.circleId].y<input[rhs.circleId].y;
     }
@@ -160,8 +167,8 @@ static const bool operator<(const Point& lhs,const Point& rhs)
  */
 static int64_t calc(uint32_t c,uint32_t h)
 {
-    int64_t result=((input[c].h<0)?(-input[c].h):-(std::min<int32_t>(h,input[c].h)))*input[c].r*input[c].r;
-    for(std::vector<uint32_t>::const_iterator i=input[c].next.begin(),e=input[c].next.end();i!=e;++i)
+    int64_t result=((input[c].h<0)?(-input[c].h):-(std::min<int32_t>(h,input[c].h)))*static_cast<int64_t>(input[c].r)*input[c].r;
+    for(std::vector<uint32_t>::const_iterator i=input[c].next.begin(),e=input[c].next.end(); i!=e; ++i)
     {
         result+=calc(*i,std::max<int32_t>(0,h-input[c].h));
     }
@@ -178,62 +185,66 @@ inline static void solution()
     while(z--)
     {
         in>>n;
+        delete [] input;
         input=new Circle[n];
         Event *events=new Event[2*n];
         for(size_t i=0; i<n; ++i)
         {
             in>>input[i].x>>input[i].y>>input[i].r>>input[i].h;
-            events[2*i]= {static_cast<uint32_t>(i),false};
-            events[2*i+1]= {static_cast<uint32_t>(i),true};
+            events[2*i]= Event(static_cast<uint32_t>(i),false);
+            events[2*i+1]= Event(static_cast<uint32_t>(i),true);
         }
         std::sort(events,events+2*n);
-        std::set<Point> points;
-        for(const Event *i=events,*e=events+2*n; i!=e; ++i)
         {
-            if(i->side)
+            // WARNING: Jak zachowa się set, gdy podczas pracy destruktora
+            //          operator< powoduje UB?
+            std::set<Point> points;
+            for(const Event *i=events,*e=events+2*n; i!=e; ++i)
             {
-                points.erase( {i->circleId,false});
-                points.erase( {i->circleId,true});
-            }
-            else
-            {
-                std::pair<std::set<Point>::iterator,bool> t=points.insert({i->circleId,false});
-                check(t.second);
-                std::set<Point>::iterator pp=t.first;
-                ++pp;
-                if(pp==points.end())
+                if(i->side)
                 {
-                    // nie ma ojca
-                    input[i->circleId].parent=-1;
+                    points.erase(Point(i->circleId,false));
+                    points.erase(Point(i->circleId,true));
                 }
                 else
                 {
-                    if(pp->upper)
+                    std::pair<std::set<Point>::iterator,bool> t=points.insert(Point(i->circleId,false));
+                    check(t.second);
+                    std::set<Point>::iterator pp=t.first;
+                    ++pp;
+                    if(pp==points.end())
                     {
-                        // pp jest punktem naszego parenta
-                        input[i->circleId].parent=pp->circleId;
-                        input[pp->circleId].next.push_back(i->circleId);
+                        // nie ma ojca
+                        input[i->circleId].parent=-1;
                     }
                     else
                     {
-                        // pp jest punktem naszego brata
-                        input[i->circleId].parent=input[pp->circleId].parent;
-                        input[input[pp->circleId].parent].next.push_back(i->circleId);
+                        if(pp->upper)
+                        {
+                            // pp jest punktem naszego parenta
+                            input[i->circleId].parent=pp->circleId;
+                            input[pp->circleId].next.push_back(i->circleId);
+                        }
+                        else
+                        {
+                            // pp jest punktem naszego brata
+                            input[i->circleId].parent=input[pp->circleId].parent;
+                            input[input[pp->circleId].parent].next.push_back(i->circleId);
+                        }
                     }
+                    points.insert(Point(i->circleId,true));
                 }
-                points.insert({i->circleId,true});
             }
         }
 
         size_t result=0;
-        for(size_t i=0;i<n;++i)
+        for(size_t i=0; i<n; ++i)
         {
             if(input[i].parent==-1)
                 result+=calc(i,0);
         }
         out<<result<<'\n';
         delete [] events;
-        delete [] input;
     }
 }
 
@@ -251,3 +262,4 @@ int main(int argc, char** argv)
     solution();
     return 0;
 }
+

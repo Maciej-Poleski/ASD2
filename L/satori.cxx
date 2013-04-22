@@ -307,7 +307,7 @@ const std::vector< State* >& NFA::getStartStates() const
 
 static NFAPtr parseRegex()
 {
-    NFAPtr result=NFA::acceptStar(NFA::acceptDot());
+    NFAPtr result=NFA::acceptEmpty();
     NFAPtr lastPart=NFA::acceptEmpty();
     for(;;)
     {
@@ -552,7 +552,7 @@ inline static void solution()
     //z=1;
     while(z--)
     {
-        DFAMaker m(parseRegex());
+        DFAMaker m(NFA::acceptCat(NFA::acceptStar(NFA::acceptDot()),parseRegex()));
         m.makeDFA();
         size_t q;
         in>>q;

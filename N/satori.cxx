@@ -86,10 +86,10 @@ typedef std::size_t size_t;
 #include <iomanip>
 #include <set>
 #include <map>
-// #include <tr1/memory>
-// #include <tr1/functional>
-// #include <tr1/unordered_map>
-// #include <tr1/unordered_set>
+#include <tr1/memory>
+#include <tr1/functional>
+#include <tr1/unordered_map>
+#include <tr1/unordered_set>
 
 namespace
 {
@@ -229,7 +229,8 @@ inline static void solution()
                         {
                             // pp jest punktem naszego brata
                             input[i->circleId].parent=input[pp->circleId].parent;
-                            input[input[pp->circleId].parent].next.push_back(i->circleId);
+                            if(input[pp->circleId].parent!=-1)
+                                input[input[pp->circleId].parent].next.push_back(i->circleId);
                         }
                     }
                     points.insert(Point(i->circleId,true));

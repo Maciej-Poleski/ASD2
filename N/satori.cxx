@@ -153,10 +153,19 @@ static const bool operator<(const Point& lhs,const Point& rhs)
     }
 };
 
+/**
+ * @param c Dany walec
+ * @param h Wysokość poziomu morza względem wysokości ojca @c c
+ * @return Ilość wody w @c c i jego potomkach
+ */
 static int64_t calc(uint32_t c,uint32_t h)
 {
-    int64_t result=(input[c].h<0)?(-input[c].h)*input[c].r*input[c].r:;
-
+    int64_t result=((input[c].h<0)?(-input[c].h):-(std::min<int32_t>(h,input[c].h)))*input[c].r*input[c].r;
+    for(std::vector<uint32_t>::const_iterator i=input[c].next.begin(),e=input[c].next.end();i!=e;++i)
+    {
+        result+=calc(*i,std::max<int32_t>(0,h-input[c].h));
+    }
+    return result;
 }
 
 inline static void solution() __attribute__((optimize(3)));
@@ -174,8 +183,8 @@ inline static void solution()
         for(size_t i=0; i<n; ++i)
         {
             in>>input[i].x>>input[i].y>>input[i].r>>input[i].h;
-            events[2*i]= {i,false};
-            events[2*i+1]= {i,true};
+            events[2*i]= {static_cast<uint32_t>(i),false};
+            events[2*i+1]= {static_cast<uint32_t>(i),true};
         }
         std::sort(events,events+2*n);
         std::set<Point> points;

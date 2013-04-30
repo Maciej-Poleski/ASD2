@@ -1,0 +1,34 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 3.1}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 3.1)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+Najbardziej odległa para punktów należy do otoczki wypukłej zbioru. Gdyby tak nie było, to moglibyśmy zwiększyć maksymalną odległość przedłużając odcinek łączący daną parę punktów aż do krawędzi otoczki i wybierając jeden z końców tej krawędzi (któryś z nich zwiększyłby odległość (bo oba punkty są wewnątrz otoczki)). Otoczke wypukłą możemy znaleźć np. algorytmem Grahama w czasie $n\log{n}$.
+
+\end{document}

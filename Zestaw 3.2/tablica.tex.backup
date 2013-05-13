@@ -1,0 +1,63 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 3.2}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 3.2)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+$
+\begin{bmatrix}
+ A & B & C \\
+ 1 & 0 & 0 \\
+ 0 & 0 & 1 \\
+\end{bmatrix}
+$
+$\times$
+$
+\begin{bmatrix}
+ x_{n-1} \\
+ x_{n-2} \\
+ 1 \\
+\end{bmatrix}
+$
+$=$
+$
+\begin{bmatrix}
+ Ax_{n-1}+Bx_{n-2}+C \\
+ x_{n-1} \\
+ 1 \\
+\end{bmatrix}
+$
+$=$
+$
+\begin{bmatrix}
+ x_{n} \\
+ x_{n-1} \\
+ 1 \\
+\end{bmatrix}
+$
+\end{document}

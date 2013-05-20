@@ -1,0 +1,57 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 3.3}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 3.3)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+Zbudujmy najpierw na tej tablicy kopiec. Czas liniowy. Pozostaje teraz zbudować strukturę (dane na temat odległości od liści). Możemy to zrobić przeglądając drzewo w kolejności postorder (czas liniowy).
+
+\section{}
+W tym rozwiązaniu potrzebna jest kolejka priorytetowa złączalna na krawędziach (jedna krawędź może się pojawić łącznie conajwyżej 2 razy we wszystkich instancjach kolejki). Operacją złączania nie tylko musi być wydajna ($\log{n}$), ale również działać jak różnica symetryczna. Możemy zaimplementować tę kolejkę przy użyciu drzewa lewicowego. Wszystkie operację działają jak w drzewie lewicowym z wyjątkiem operacji min(). Którą implementujemy w ten sposób:
+\begin{alltt}
+ // wszystkie wywołania funkcji dotyczą funkcji dostarczanych
+ // przez drzewo lewicowe
+ while true:
+  a <- extract_min()
+  b <- min()
+  if a != b:
+    insert(a)
+    return a
+  else
+    extract_min()
+\end{alltt}
+Czyli w skrócie wyciągamy wszystkie pojawiąjące się zduplikowane elementy z drzewa aż do napotkania pierwszego nie zduplikowanego - jego pozostawiamy i zwracamy. Złożoność jest zamortyzowana logarytmiczna (jeżeli wszystkich krawędzi jest $n$, to w czasie całego algorytmu w drzewie pojawi się conajwyżej $2n$ elementów. Każdy element jest jeden raz umieszczany kolejce i conajwyżej raz usuwany z niej ($0\leq{1}$). To daje koszt logarytmiczny na jedno wywołanie funkcji + $n\log{n}$ na wywołanie ciągu funkcji. Amortycuje się do logarytmicznego).
+extract\_min() nie wykorzystujemy.
+
+Algorytm:
+Znajdujemy jakieś minimalne drzewo rozpinające np. algorytmem Kruskala. Ukorzeniamy to drzewo jakkolwiek i przechodzimy w kolejności postorder. Dla każdego przetwarzanego poddrzewa posiadamy wyżej opisaną kolejkę priorytetową zawierającą krawędzie wychodzące z danego poddrzewa (bez krawędzi parent z korzenia danego poddrzewa). Priorytetem jest waga krawędzi. Krawędź ``parent'' (łączącą korzeń danego poddrzewa z jego ojcem) możemy zastąpić najlżejszą krawędzią z kolejki priorytetowej (min()). Dla danej krawędzi odpowiedzią jest koszt wyjściowego MST + różnica wag krawędzi ``parent'' i wybranej krawędzi z kolejki priorytetowej. Każda krawędź MST jest ``parentem'' jakiegoś wierzchołka w ukorzenionym MST. Natomiast usunięcie krawędzi nie należącej do MST nic nie zmienia. Na postawie kolejek priorytetowych dzieci możemy uzyskać kolejkę priorytetową rodzica po prostu łącząc wszystkie kolejki dzieci (implementacji zrobi dla nas różnicę symetryczną - usunie te krawędzie które łączą ze sobą poddrzewa rodzeństwa w efekcie zostaną tylko te krawędzie które wychodzą z dokładnie jednego z poddrzew) i dodając (czyli mergując z singletonem) krawędzie niedrzewowe wychodzące z rodzica.
+
+Kruskal $E\log{V}$, reszta $E\log{V}$ ($E$ insertów, $V$ min(), $V$ merge()
+
+
+\end{document}

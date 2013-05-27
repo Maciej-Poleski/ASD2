@@ -1,0 +1,43 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 3.3}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 3.3)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+Mamy dwie zmienne ($x$ i $y$). Oznaczają one ilość paczek paszy odpowiednio za 25 i 20 euro. Minimalizujemy koszt czyli $25x + 20y$. Mamy dane wymagania (ilość odpowiednio węglowodanów, białek i tłuszczu):
+$$2x+y\geq{12}$$
+$$2x+9y\geq{36}$$
+$$2x+3y\geq{24}$$
+Mamy dwa wymiary. Osobiście narysowałem 3 wykresy. Sprawdziłem 2 punkty w których się przecinają (trzeci nie należy do części wspólnej). Optymalny jest punkt $(3,6)$ i minimalny koszt 195 euro.
+
+\section{}
+Każdą krawędź $(a,b)$ o przepustowości $c$ zamieniamy na ograniczenie $0\leq{x_{xy}}\leq{c}$ (przepływ na krawędziach jest ograniczony przez ich przepustowość). Dla każdego wierzchołka $a$ (z wyjątkiem źródła i ujścia) tworzymy ograniczenie $\sum_{b}x_{ab}=\sum_{b}x_{ba}$ (to co wypływa z wierzchołka musi gdzieś wpłynąć). Funkcją celu jest to co wpływa do ujścia ($\sum_{a}x_{at}-\sum_{a}x_{ta}$) (maksymalizujemy ją). Znajdujemy w ten sposób maksymalny przepływ. Teraz znając go dodajemy ograniczenie na ujście tak aby wpływało do niego co najmniej właśnie tyle ($\sum_{a}x_{at}-\sum_{a}x_{ta}\geq$stała będąca rozwiązaniem programu liniowego). Tym razem optymalizujemy koszt czyli sumę iloczynu przepływu na każdej krawędzi oraz jej kosztu ($\sum_{ab}x_{ab}c_{ab}$ gdzie $c_{ab}$ to koszt krawędzi $(a,b)$) (minimalizujemy ją).
+
+Możemy też policzyć wszystko za jednym zamachem. Łączymy ujście z źródłem krawędzią o nieograniczonej przepustowości (nie dodajemy ograniczenia na przepustowość tej krawędzi) i ujemnym koszcie (tak małym, aby zawsze puszczenie przepływu po tej krawędzi opłacało się). Optymalizujemy tylko koszt (minimalizujemy). Dzięki takiej konstrukcji grafu każda jednostka przepływu wpływająca do ujścia będzie posyłana dodaną krawędzią prosto do źródła aby zoptymalizować funkcję celu (którą jest tylko koszt). Aby jak najlepiej zoptymalizować funkcję celu trzeba będzie doprowadzić nie tylko do uzyskania możliwie małego kosztu, ale w pierwszej kolejności największego możliwego przepływu ponieważ to właśnie posłanie przepływu z powrotem do źródła przyniesie największą korzyść. Gdy korzyść z tego powodu będzie już największa możliwa wtedy pozostanie samo minimalizowanie kosztu w celu realizacji maksymalnego przepływu. Przy rekonstruowaniu rozwiązania konieczne będzie uwzględnienie wpływu dodatkowej krawędzi na wynikowy koszt.
+
+\end{document}

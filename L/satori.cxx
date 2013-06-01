@@ -254,32 +254,32 @@ NFAPtr NFA::acceptStar(NFAPtr A)
 {
     if(A==emptyNFA)
         return A;
-//     NFAPtr result(new NFA);
-//     result->transferStates(A);
-//     State *aux=result->newState(true,true);
-//     for(std::vector<State*>::iterator i=A->terminalStates.begin(),e=A->terminalStates.end(); i!=e; ++i)
-//     {
-//         (*i)->edges.push_back( {aux,'\0'});
-//     }
-//     for(std::vector<State*>::iterator i=A->startStates.begin(),e=A->startStates.end(); i!=e; ++i)
-//     {
-//         aux->edges.push_back( {*i,'\0'});
-//     }
-//     return result;
     NFAPtr result(new NFA);
     result->transferStates(A);
-    State *start=result->newState(true,false);
-    State *terminal=result->newState(false,true);
-    start->edges.push_back( {terminal,'\0'});
+    State *aux=result->newState(true,true);
     for(std::vector<State*>::iterator i=A->terminalStates.begin(),e=A->terminalStates.end(); i!=e; ++i)
     {
-        (*i)->edges.push_back( {terminal,'\0'});
+        (*i)->edges.push_back( {aux,'\0'});
     }
     for(std::vector<State*>::iterator i=A->startStates.begin(),e=A->startStates.end(); i!=e; ++i)
     {
-        start->edges.push_back( {*i,'\0'});
-        terminal->edges.push_back( {*i,'\0'});
+        aux->edges.push_back( {*i,'\0'});
     }
+    return result;
+//     NFAPtr result(new NFA);
+//     result->transferStates(A);
+//     State *start=result->newState(true,false);
+//     State *terminal=result->newState(false,true);
+//     start->edges.push_back( {terminal,'\0'});
+//     for(std::vector<State*>::iterator i=A->terminalStates.begin(),e=A->terminalStates.end(); i!=e; ++i)
+//     {
+//         (*i)->edges.push_back( {terminal,'\0'});
+//     }
+//     for(std::vector<State*>::iterator i=A->startStates.begin(),e=A->startStates.end(); i!=e; ++i)
+//     {
+//         start->edges.push_back( {*i,'\0'});
+//         terminal->edges.push_back( {*i,'\0'});
+//     }
     return result;
 }
 
@@ -349,8 +349,14 @@ struct DetState
     uint32_t next[2];
     bool terminal;
 
+    std::vector<uint32_t> back[2];
+
     DetState() : terminal(false) {}
-    DetState(const DetState &detState) : next {detState.next[0],detState.next[1]}, terminal(detState.terminal) {}
+    DetState(const DetState &detState) :
+        next {detState.next[0],detState.next[1]},
+         terminal(detState.terminal),
+         back {detState.back[0],detState.back[1]}
+    {}
 
     DetState(uint32_t a,uint32_t b, bool terminal) : next {a,b}, terminal(terminal) {}
 };
@@ -400,14 +406,19 @@ public:
 
     void makeDFA();
     bool isAccepted(const std::string &line);
+    void minimalize();
+
+    bool equalsTo(const DFAMaker& dfaMaker) const;
 
 private:
     size_t integerFromState(State *state);
     uint32_t detStateFromStateSet(uint64_t stateSet);
     uint64_t stateSetFromStateSet(const std::tr1::unordered_set<State*> &set);
+    void removeNotReachable();
+    void markReachable(Wrapper::size_t v, std::vector< Wrapper::uint32_t >& fromOldIdToNewId, Wrapper::size_t& nextId) const;
 
 private:
-    const NFAPtr nfa;
+    NFAPtr nfa;
     const std::size_t NFASize;
     std::tr1::unordered_map<State*,size_t> stateToInteger;
     std::size_t nextIntegerFromState;
@@ -459,7 +470,9 @@ void DFAMaker::makeDFA()
                 detStatesToFollow.push(a);
                 stateSetEnqueued.insert(a);
             }
-            DFA[detState]->next[charToIndex('a')]=detStateFromStateSet(a);
+            uint32_t t=detStateFromStateSet(a);
+            DFA[detState]->next[charToIndex('a')]=t;
+            //DFA[t]->back[charToIndex('a')].push_back(detState);
         }
 
         // b
@@ -478,7 +491,9 @@ void DFAMaker::makeDFA()
                 detStatesToFollow.push(b);
                 stateSetEnqueued.insert(b);
             }
-            DFA[detState]->next[charToIndex('b')]=detStateFromStateSet(b);
+            uint32_t t=detStateFromStateSet(b);
+            DFA[detState]->next[charToIndex('b')]=t;
+            //DFA[t]->back[charToIndex('b')].push_back(detState);
         }
     }
 }
@@ -542,6 +557,146 @@ bool DFAMaker::isAccepted(const std::string &line)
     return DFA[state]->terminal;
 }
 
+void DFAMaker::markReachable(size_t v, std::vector< uint32_t > &fromOldIdToNewId,size_t &nextId) const
+{
+    if(fromOldIdToNewId[v]!=std::numeric_limits<uint32_t>::max())
+        return;
+    fromOldIdToNewId[v]=nextId++;
+    markReachable(DFA[v]->next[charToIndex('a')],fromOldIdToNewId,nextId);
+    markReachable(DFA[v]->next[charToIndex('b')],fromOldIdToNewId,nextId);
+}
+
+void DFAMaker::removeNotReachable()
+{
+    size_t oldSize=DFA.size();
+    std::vector<uint32_t> fromOldIdToNewId(oldSize,std::numeric_limits<uint32_t>::max());
+    size_t newSize=0;
+    markReachable(0,fromOldIdToNewId,newSize);
+    std::vector<std::tr1::shared_ptr<DetState> > newDFA(newSize);
+    for(size_t i=0; i<newSize; ++i)
+        newDFA[i].reset(new DetState);
+    for(size_t i=0; i<oldSize; ++i)
+    {
+        if(fromOldIdToNewId[i]==std::numeric_limits<uint32_t>::max())
+            continue;
+        newDFA[fromOldIdToNewId[i]]->terminal=DFA[i]->terminal;
+        for(char c='a'; c<='b'; ++c)
+        {
+            uint32_t next=fromOldIdToNewId[DFA[i]->next[charToIndex(c)]];
+            check(next!=std::numeric_limits<uint32_t>::max());
+            newDFA[fromOldIdToNewId[i]]->next[charToIndex(c)]=next;
+            newDFA[next]->back[charToIndex(c)].push_back(fromOldIdToNewId[i]);
+        }
+    }
+    using std::swap;
+    swap(DFA,newDFA);
+}
+
+void DFAMaker::minimalize()
+{
+    {
+        // free memory
+        nfa.reset();
+        std::tr1::unordered_map<State*,size_t> a;
+        a.swap(stateToInteger);
+        std::vector<State*> b;
+        stateByInteger.swap(b);
+        std::tr1::unordered_map<uint64_t,uint32_t> c;
+        stateSetToDetState.swap(c);
+    }
+    removeNotReachable();       // probably redundant
+    const size_t detStatesCount=DFA.size();
+    std::vector<std::vector<bool> > matrix;
+    std::stack<std::pair<uint32_t,uint32_t> > setOfPairsToCheck;
+    for(size_t i=0; i<detStatesCount; ++i)
+    {
+        std::vector<bool> row;
+        for(size_t j=0; j<i; ++j)
+        {
+            bool t=DFA[i]->terminal!=DFA[j]->terminal;
+            row.push_back(t);
+            if(t)
+            {
+                setOfPairsToCheck.push(std::pair<uint32_t,uint32_t>(i,j));
+            }
+        }
+        matrix.push_back(row);
+    }
+    while(!setOfPairsToCheck.empty())
+    {
+        uint32_t ii=setOfPairsToCheck.top().first;
+        uint32_t jj=setOfPairsToCheck.top().second;
+        setOfPairsToCheck.pop();
+        for(char c='a'; c<='b'; ++c)
+        {
+            for(std::vector<uint32_t>::const_iterator i=DFA[ii]->back[charToIndex(c)].begin(),e=DFA[ii]->back[charToIndex(c)].end(); i!=e; ++i)
+            {
+                for(std::vector<uint32_t>::const_iterator j=DFA[jj]->back[charToIndex(c)].begin(),ej=DFA[jj]->back[charToIndex(c)].end(); j!=ej; ++j)
+                {
+                    std::pair<uint32_t,uint32_t> p(std::max(*i,*j),std::min(*i,*j));
+                    if(!matrix[p.first][p.second])
+                    {
+                        matrix[p.first][p.second]=true;
+                        setOfPairsToCheck.push(p);
+                    }
+                }
+            }
+        }
+    }
+    std::vector<uint32_t> fromOLdIdToNewId(detStatesCount);
+    for(size_t i=0; i<detStatesCount; ++i)
+    {
+        uint32_t selected=i;
+        for(size_t j=0; j<i; ++j)
+        {
+            if(!matrix[i][j])
+            {
+                selected=j;
+                break;
+            }
+        }
+        fromOLdIdToNewId[i]=selected;
+    }
+    for(size_t i=0; i<detStatesCount; ++i)
+    {
+        for(char c='a'; c<='b'; ++c)
+        {
+            DFA[i]->next[charToIndex(c)]=fromOLdIdToNewId[DFA[i]->next[charToIndex(c)]];
+        }
+    }
+    removeNotReachable();       // this is not redundant
+}
+
+bool DFAMaker::equalsTo(const DFAMaker& dfaMaker) const
+{
+    // minimalize method is _very_ deterministic
+    if(DFA.size()!=dfaMaker.DFA.size())
+        return false;
+    for(size_t i=0;i<DFA.size();++i)
+    {
+        if(DFA[i]->terminal!=dfaMaker.DFA[i]->terminal)
+            return false;
+        for(char c='a';c<='b';++c)
+        {
+            if(DFA[i]->next[charToIndex(c)]!=dfaMaker.DFA[i]->next[charToIndex(c)])
+                return false;
+        }
+    }
+    return true;
+}
+
+const bool operator==(const DFAMaker& lhs, const DFAMaker &rhs)
+{
+    return lhs.equalsTo(rhs);
+}
+
+const bool operator==(DFAMaker& lhs, DFAMaker &rhs)
+{
+    lhs.minimalize();
+    rhs.minimalize();
+    return lhs.equalsTo(rhs);
+}
+
 inline static void solution() __attribute__((optimize(3)));
 inline static void solution()
 {
@@ -554,6 +709,7 @@ inline static void solution()
     {
         DFAMaker m(NFA::acceptCat(NFA::acceptStar(NFA::acceptDot()),parseRegex()));
         m.makeDFA();
+        m.minimalize();
         size_t q;
         in>>q;
         in.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
@@ -580,3 +736,5 @@ int main(int argc, char** argv)
     solution();
     return 0;
 }
+
+

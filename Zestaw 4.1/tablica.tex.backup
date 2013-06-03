@@ -1,0 +1,38 @@
+\documentclass[a4paper,12pt]{article}
+%\documentclass[a4paper,12pt]{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{polski}
+
+\title{Zadania domowe. Zestaw 4.1}
+\author{Maciej Poleski}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{listings}
+
+\date{\today}
+
+\pdfinfo{%
+  /Title    (Zadania domowe. Zestaw 4.1)
+  /Author   (Maciej Poleski)
+  /Creator  (Maciej Poleski)
+  /Producer (Maciej Poleski)
+  /Subject  (ASD2)
+  /Keywords (ASD2)
+}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\section{}
+Zredukujemy problem subset-sum do problemu z treści zadania. Jeżeli $S$ jest sumą wszystkich elementów, a $B$ liczbą zadaną w problemie subset-sum to tworzymy dwa dodatkowe elementy $2S-B$ oraz $S+B$. Jeżeli w naszym zbiorze istnieje podzbiór o sumie równej $B$ to po dodaniu do niego elementu $2S-B$ uzyskamy sumę $2S$ czyli tyle samo co pozostałe elementy ($S-B$) + dodatkowy element $S+B$. Czyli zbiór wzbogacony o te dwa elementy da się podzielić na dwie części o równych sumach. Jeżeli się da to dwa dodatkowe elementy są w różnych podzbiorach (ponieważ ich suma to $3S$, tymczasem suma całego jednego podzbioru to $2S$). Wtedy w podzbiorze zawierającym element $2S-B$ suma pozostałych elementów jest równa $B$ czyli tyle ile chcemy.
+
+Mając rozwiązanie tego problemu możemy sprawdzić w czasie liniowym czy jest poprawne (sumując elementy z obu podzbiorów i sprawdzając czy obie sumy są równe). W takim razie jest to problem klasy NP.
+
+Problem subset-sum jest NPC oraz może zostać zredukowany do problemu z treści zadania. W takim razie problem z treści zadania również jest problemem NPC.
+
+\end{document}

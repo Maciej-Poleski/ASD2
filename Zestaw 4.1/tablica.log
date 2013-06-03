@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2013.5.16)  3 JUN 2013 21:46
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2013.5.16)  3 JUN 2013 21:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -280,7 +280,7 @@ type1/public/pl/plmi12.pfb></usr/share/texmf-dist/fonts/type1/public/pl/plr12.p
 fb></usr/share/texmf-dist/fonts/type1/public/pl/plr17.pfb></usr/share/texmf-dis
 t/fonts/type1/public/pl/plsy10.pfb></usr/share/texmf-dist/fonts/type1/public/pl
 /pltt12.pfb>
-Output written on tablica.pdf (3 pages, 39949 bytes).
+Output written on tablica.pdf (3 pages, 39955 bytes).
 PDF statistics:
  42 PDF objects out of 1000 (max. 8388607)
  30 compressed objects within 1 object stream
